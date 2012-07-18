@@ -22,7 +22,13 @@
 
 <%= link_to 'New Post', new_post_path %>
 
+<div id="timeline"></div>
+
 <div id="posts"></div>
+
+<div id="pubnub" pub-key="pub-02dcd9e4-010e-45ad-97da-85286bfa8122" sub-key="sub-86d53059-d0b0-11e1-9217-bbb8cde722e4" ssl="off" origin="pubsub.pubnub.com"></div>
+
+<script type="text/JavaScript" src="http://cdn.pubnub.com/pubnub-3.1.min.js"></script> 
 
 <script type="text/javascript">
   $(function() {
@@ -30,4 +36,18 @@
     window.router = new Chat.Routers.PostsRouter({posts: <%= @posts.to_json.html_safe -%>});
     Backbone.history.start();
   });
+
+  function updateTimeline(message) {
+    //var html = JST['update'](jQuery.parseJSON(message));
+    $('#timeline').prepend(jQuery.parseJSON(message).body + "<br/>");
+  }
+
+  // Listen for Messages
+  PUBNUB.subscribe({
+    channel: "1",
+    callback: function(message) {
+      updateTimeline(message)
+      //alert(message);
+    }
+  })
 </script>
