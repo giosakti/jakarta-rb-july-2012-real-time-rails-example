@@ -1,4 +1,6 @@
 Chat::Application.routes.draw do
+  resources :posts
+
   root to: "main#index"
 
   # The priority is based upon order of creation:
